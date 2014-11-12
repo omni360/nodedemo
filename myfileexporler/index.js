@@ -3,7 +3,9 @@
  * Module dependencies.
  */
 
-var fs = require('fs');
+var fs = require('fs')
+,stdin = process.stdin
+,stdout = process.stdout;
 fs.readdir(__dirname,function(err,files){
     console.log(files);
 });
@@ -25,18 +27,32 @@ fs.readdir(process.cwd(), function(err,files){
 				console.log('	'+i+'	\033[90m' + filename+'\033[39m');
 			}
 
-			i++;
-			if(i == files.length){
-				console.log('');
+			if(++i == files.length){
+/*				console.log('');
 				process.stdout.write('	'+i+'	\033[33mEnter your choice ' + '\033[39m');
 				process.stdin.resume();
-				process.stdin.setEncoding('utf8');
+				process.stdin.setEncoding('utf8');*/
+                read();
 
 			}else{
 				file(i);
 			}
 		});
 	}
+    function read(){
+    	console.log('');
+        stdout.write('\033[33mEnter your choice ' + '\033[39m');
+        stdin.resume();
+        stdin.setEncoding('utf8');
+        stdin.on('data',option);
+    }
+    function option(data){
+    	if(!files[Number(data)]){
+        	stdout.write('	\033[31mEnter your choice:	\33[39m');
+        }else{
+        	stdin.pause();
+        }
+    }
 	file(0);
 
 });
